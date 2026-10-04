@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday Aurora Jasmine Octasya 💖</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Canvas Confetti -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        desert: {
+                            bg: '#FEF9EF',
+                            card: '#FDE9D0',
+                            border: '#E6A871',
+                            primary: '#C26D3C',
+                            dark: '#5C2E14'
+                        }
+                    },
+                    fontFamily: {
+                        handwriting: ['Caveat', 'cursive'],
+                        sans: ['Plus Jakarta Sans', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #FEF9EF;
+            color: #5C2E14;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* Floating Animation */
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-10px) rotate(1deg); }
+        }
+        .animate-float {
+            animation: float 4s ease-in-out infinite;
+        }
+
+        /* Envelope Styling & Animation */
+        .envelope-wrapper {
+            perspective: 1000px;
+        }
+        .envelope {
+            position: relative;
+            background-color: #FDE9D0;
+            border: 3px solid #E6A871;
+            transition: all 0.5s ease-in-out;
+            box-shadow: 0 15px 30px rgba(92, 46, 20, 0.15);
+        }
+        .envelope-flap {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 50%;
+            background-color: #E6A871;
+            clip-path: polygon(0 0, 50% 100%, 100% 0);
+            transform-origin: top;
+            transition: transform 0.6s ease-in-out;
+            z-index: 10;
+        }
+        .envelope.open .envelope-flap {
+            transform: rotateX(180deg);
+            z-index: 1;
+        }
+
+        /* Candle Flame Animation */
+        @keyframes flicker {
+            0%, 100% { transform: scale(1) rotate(-1deg); opacity: 0.9; }
+            20% { transform: scale(1.1) rotate(2deg); opacity: 1; }
+            40% { transform: scale(0.95) rotate(-2deg); opacity: 0.8; }
+            60% { transform: scale(1.05) rotate(1deg); opacity: 1; }
+            80% { transform: scale(1) rotate(-1deg); opacity: 0.9; }
+        }
+        .flame {
+            animation: flicker 0.6s infinite alternate;
+            transform-origin: center bottom;
+        }
+
+        /* Washi Tape styling for Polaroids */
+        .washi-tape {
+            position: absolute;
+            width: 70px;
+            height: 20px;
+            background-color: rgba(230, 168, 113, 0.6);
+            backdrop-filter: blur(2px);
+            border: 1px dashed rgba(194, 109, 60, 0.4);
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%) rotate(-3deg);
+            z-index: 20;
+        }
+
+        /* Background Sparkles Particles */
+        .particle {
+            position: fixed;
+            pointer-events: none;
+            opacity: 0.6;
+            animation: floatUp 8s linear infinite;
+        }
+        @keyframes floatUp {
+            0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+            20% { opacity: 0.7; }
+            80% { opacity: 0.7; }
+            100% { transform: translateY(-100px) rotate(360deg); opacity: 0; }
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between relative selection:bg-desert-border selection:text-desert-dark">
+
+    <div id="ambient-particles" class="fixed inset-0 pointer-events-none z-0"></div>
+
+    <div class="fixed top-4 right-4 z-50 flex items-center gap-2 bg-desert-card/90 backdrop-blur-md border-2 border-desert-border px-3 py-2 rounded-full shadow-lg">
+        <button id="music-toggle" class="w-10 h-10 rounded-full bg-desert-primary text-desert-bg flex items-center justify-center shadow hover:scale-105 transition-transform" title="Play/Pause Music">
+            <i id="music-icon" class="fas fa-music text-sm"></i>
+        </button>
+        <span id="music-status" class="text-xs font-semibold text-desert-dark pr-2 hidden sm:inline">Adu Pandang 🎵</span>
+    </div>
+    <!-- Hidden Audio Element -->
+    <!-- Fallback MP3 audio source -->
+    <audio id="bg-music" loop preload="auto">
+        <source src="Rizky Febian - Adu Pandang (Official Lyric Video).mp3" type="audio/mpeg">
+    </audio>
+
+    <section id="envelope-section" class="min-h-screen flex flex-col items-center justify-center p-4 relative z-10 transition-opacity duration-700">
+        <div class="text-center mb-8 animate-float">
+            <span class="inline-block px-4 py-1.5 bg-desert-card border border-desert-border text-desert-primary text-xs font-bold tracking-widest uppercase rounded-full mb-3 shadow-sm">
+                Ada Pesan Spesial ✨
+            </span>
+            <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold text-desert-dark tracking-tight">
+                Untuk Aurora Jasmine Octasya 💌
+            </h1>
+        </div>
+
+        <!-- Interactive Envelope -->
+        <div id="envelope-btn" class="cursor-pointer group envelope-wrapper w-72 sm:w-80 h-48 sm:h-52 my-4">
+            <div id="envelope-box" class="envelope w-full h-full rounded-2xl flex flex-col items-center justify-center p-4 transition-transform duration-300 group-hover:scale-105 group-hover:shadow-2xl">
+                <div class="envelope-flap rounded-t-2xl"></div>
+                
+                <!-- Wax Seal / Heart Icon -->
+                <div class="z-20 w-16 h-16 bg-desert-primary rounded-full flex items-center justify-center shadow-lg border-2 border-desert-bg transition-transform duration-300 group-hover:scale-110">
+                    <i class="fas fa-heart text-2xl text-desert-bg animate-pulse"></i>
+                </div>
+
+                <p class="z-20 text-desert-dark font-semibold mt-4 text-sm sm:text-base group-hover:text-desert-primary transition-colors flex items-center gap-1.5">
+                    <span>Buka Ya</span>
+                    <i class="fas fa-hand-pointer text-xs animate-bounce text-desert-primary"></i>
+                </p>
+            </div>
+        </div>
+        <p class="text-xs text-desert-primary/80 mt-4 animate-pulse">Klik amplop di atas untuk membuka</p>
+    </section>
+
+    <main id="letter-section" class="hidden min-h-screen py-10 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto relative z-10 transition-all duration-1000 opacity-0 transform translate-y-8">
+        
+        <!-- Header Ribbon -->
+        <div class="text-center mb-8">
+            <div class="inline-flex items-center gap-2 px-4 py-1.5 bg-desert-card border border-desert-border rounded-full shadow-sm text-desert-primary font-medium text-sm mb-2">
+                <i class="fas fa-sparkles"></i>
+                <span>Special Birthday Celebration</span>
+                <i class="fas fa-sparkles"></i>
+            </div>
+            <h1 class="text-3xl sm:text-5xl font-extrabold text-desert-dark tracking-wide">
+                HAPPY BIRTHDAY 🎂
+            </h1>
+        </div>
+
+        <!-- Main Responsive Layout Container -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+            
+            <div class="lg:col-span-3 flex flex-col sm:flex-row lg:flex-col gap-6 justify-center items-center order-2 lg:order-1">
+                <!-- Polaroid Photo 1 -->
+                <div class="relative bg-white p-3 rounded-lg shadow-md border border-desert-border/40 transform -rotate-3 hover:rotate-0 transition-transform duration-300 w-64 lg:w-full group">
+                    <div class="washi-tape"></div>
+                    <div class="relative aspect-square overflow-hidden rounded bg-desert-card flex items-center justify-center">
+                        <img id="photo-1" src="1.jpeg" alt="Memory 1" class="w-full h-full object-cover">
+                        <!-- Upload Overlay -->
+                        <label for="input-photo-1" class="absolute inset-0 bg-desert-dark/50 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center text-white cursor-pointer p-2 text-center text-xs">
+                            <i class="fas fa-camera text-xl mb-1"></i>
+                            <span>Ganti Foto</span>
+                        </label>
+                        <input type="file" id="input-photo-1" accept="image/*" class="hidden" onchange="updatePhoto(this, 'photo-1')">
+                    </div>
+                    <p class="font-handwriting text-xl text-center text-desert-dark mt-2">Moment ✨</p>
+                </div>
+
+                <!-- Polaroid Photo 2 (Visible on desktop/tablet) -->
+                <div class="relative bg-white p-3 rounded-lg shadow-md border border-desert-border/40 transform rotate-2 hover:rotate-0 transition-transform duration-300 w-64 lg:w-full group">
+                    <div class="washi-tape"></div>
+                    <div class="relative aspect-square overflow-hidden rounded bg-desert-card flex items-center justify-center">
+                        <img id="photo-2" src="2.jpeg" alt="Memory 2" class="w-full h-full object-cover">
+                        <label for="input-photo-2" class="absolute inset-0 bg-desert-dark/50 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center text-white cursor-pointer p-2 text-center text-xs">
+                            <i class="fas fa-camera text-xl mb-1"></i>
+                            <span>Ganti Foto</span>
+                        </label>
+                        <input type="file" id="input-photo-2" accept="image/*" class="hidden" onchange="updatePhoto(this, 'photo-2')">
+                    </div>
+                    <p class="font-handwriting text-xl text-center text-desert-dark mt-2">Sweet Smile 🌸</p>
+                </div>
+            </div>
+
+            <div class="lg:col-span-6 bg-desert-card border-2 border-desert-border rounded-3xl p-6 sm:p-8 shadow-xl relative order-1 lg:order-2">
+                
+                <!-- Cake & Candle Section -->
+                <div class="flex flex-col items-center mb-6 pt-2">
+                    <div id="cake-container" class="relative cursor-pointer group" title="Klik lilin untuk meniup!">
+                        <!-- Interactive Birthday Cake (SVG) -->
+                        <div class="w-32 h-32 relative flex justify-center items-end">
+                            <svg viewBox="0 0 100 100" class="w-full h-full drop-shadow-md">
+                                <!-- Cake Plate -->
+                                <ellipse cx="50" cy="85" rx="42" ry="8" fill="#E6A871" />
+                                <!-- Layer 1 (Bottom) -->
+                                <path d="M15 60 Q50 68 85 60 L85 82 Q50 90 15 82 Z" fill="#C26D3C" />
+                                <!-- Layer 1 Cream -->
+                                <path d="M15 60 Q25 65 35 60 Q45 65 55 60 Q65 65 75 60 Q85 65 85 60 L85 65 Q50 73 15 65 Z" fill="#FEF9EF" />
+                                <!-- Layer 2 (Top) -->
+                                <path d="M22 40 Q50 46 78 40 L78 60 Q50 68 22 60 Z" fill="#E6A871" />
+                                <!-- Frosting Drips -->
+                                <path d="M22 40 C25 48, 30 48, 32 40 C35 48, 40 48, 42 40 C45 48, 50 48, 52 40 C55 48, 60 48, 62 40 C65 48, 70 48, 72 40 C75 48, 78 48, 78 40 L78 44 Q50 52 22 44 Z" fill="#FEF9EF" />
+                                
+                                <!-- Candle -->
+                                <rect x="47" y="20" width="6" height="20" rx="2" fill="#5C2E14" />
+                                <rect x="48" y="22" width="2" height="16" fill="#FEF9EF" />
+                                <line x1="50" y1="20" x2="50" y2="16" stroke="#5C2E14" stroke-width="1.5" />
+                            </svg>
+
+                            <!-- Animated Flame -->
+                            <div id="candle-flame" class="absolute top-1 left-1/2 -translate-x-1/2 w-4 h-6 flex justify-center items-end">
+                                <div class="flame w-3 h-4 bg-amber-400 rounded-full blur-[0.5px] shadow-[0_0_10px_#f59e0b]"></div>
+                            </div>
+                            
+                            <!-- Smoke Effect (Initially Hidden) -->
+                            <div id="candle-smoke" class="hidden absolute top-0 left-1/2 -translate-x-1/2 text-xs text-gray-400 animate-ping">
+                                ☁️
+                            </div>
+                        </div>
+                    </div>
+                    <button id="blow-btn" class="mt-2 text-xs bg-desert-bg text-desert-primary px-3 py-1 rounded-full border border-desert-border hover:bg-desert-primary hover:text-white transition-colors shadow-sm">
+                        <i class="fas fa-wind mr-1"></i> Tiup Lilin
+                    </button>
+                </div>
+
+                <!-- Styled Letter Content -->
+                <div class="bg-desert-bg/80 border border-desert-border/50 rounded-2xl p-5 sm:p-7 space-y-4 shadow-inner text-desert-dark leading-relaxed font-medium">
+                    <p class="text-base sm:text-lg">
+                        𝐇𝐚𝐩𝐩𝐲 𝐛𝐢𝐫𝐭𝐡𝐝𝐚𝐲 𝐨𝐰𝐚, 𝐰𝐲𝐚𝐭𝐛 𝐟𝐫𝐨𝐦 𝐦𝐞. 𝐒𝐞𝐥𝐚𝐦𝐚 𝐩𝐞𝐫𝐣𝐚𝐥𝐚𝐧𝐚𝐧 𝐤𝐚𝐦𝐮 𝐛𝐞𝐛𝐞𝐫𝐚𝐩𝐚 𝐭𝐚𝐡𝐮𝐧 𝐢𝐧𝐢, 𝐚𝐤𝐮 𝐛𝐚𝐧𝐠𝐠𝐚 𝐛𝐠𝐭𝐭𝐭 𝐬𝐚𝐦𝐚 𝐤𝐚𝐦𝐮. 𝐏𝐞𝐫𝐤𝐞𝐦𝐛𝐚𝐧𝐠𝐚𝐧 𝐤𝐚𝐦𝐮, 𝐲𝐠 𝐤𝐚𝐦𝐮 𝐥𝐚𝐥𝐮𝐢𝐧, 𝐩𝐞𝐫𝐣𝐮𝐚𝐧𝐠𝐚𝐧 𝐤𝐚𝐦𝐮 𝐣𝐮𝐠𝐚. 𝐀𝐥𝐰𝐚𝐲𝐬 𝐠𝐢𝐯𝐢𝐧𝐠 𝐲𝐨𝐮𝐫 𝐛𝐞𝐬𝐭 𝐞𝐟𝐟𝐨𝐫𝐭. 𝐊𝐞𝐞𝐩 𝐮𝐩 𝐭𝐡𝐞 𝐬𝐩𝐢𝐫𝐢𝐭 𝐲𝐚𝐚, 𝐢'𝐥𝐥 𝐬𝐮𝐩𝐩𝐨𝐫𝐭 𝐲𝐨𝐮 𝐚𝐥𝐰𝐚𝐲𝐬. 𝐃𝐚𝐧 𝐣𝐚𝐧𝐠𝐚𝐧 𝐛𝐞 𝐚 𝐩𝐚𝐢𝐧 𝐭𝐡𝐞 𝐚𝐬𝐬 𝐚𝐣𝐚😌 
+                    </p>
+                    <p class="text-base sm:text-lg">
+                        𝐖𝐤𝐰𝐤𝐰𝐤, 𝐖𝐞𝐥𝐥.. 𝐇𝐚𝐩𝐩𝐲 𝐛𝐢𝐫𝐭𝐡𝐝𝐚𝐲 𝟐𝟒𝐭𝐡 𝐲𝐚. 𝐋𝐮𝐯 𝐔 𓆩♡𓆪
+                    </p>
+                    <p class="text-right text-base sm:text-lg font-bold text-desert-primary pt-2">
+                        -𝐅𝐫𝐨𝐦 𝐝𝐢𝐳𝐚 𝐚𝐥𝐰𝐚𝐲𝐬
+                    </p>
+                </div>
+
+                <!-- Bottom Decorative Elements -->
+                <div class="flex justify-between items-center mt-6 text-desert-primary/70 text-sm">
+                    <span class="flex items-center gap-1"><i class="fas fa-gift"></i> 24th Birthday</span>
+                    <span class="flex items-center gap-1"><i class="fas fa-heart text-xs"></i> Warm Wishes</span>
+                </div>
+            </div>
+
+            <div class="lg:col-span-3 flex flex-col sm:flex-row lg:flex-col gap-6 justify-center items-center order-3">
+                <!-- Polaroid Photo 3 -->
+                <div class="relative bg-white p-3 rounded-lg shadow-md border border-desert-border/40 transform rotate-3 hover:rotate-0 transition-transform duration-300 w-64 lg:w-full group">
+                    <div class="washi-tape"></div>
+                    <div class="relative aspect-square overflow-hidden rounded bg-desert-card flex items-center justify-center">
+                        <img id="photo-3" src="3.jpeg" alt="Memory 3" class="w-full h-full object-cover">
+                        <label for="input-photo-3" class="absolute inset-0 bg-desert-dark/50 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center text-white cursor-pointer p-2 text-center text-xs">
+                            <i class="fas fa-camera text-xl mb-1"></i>
+                            <span>Ganti Foto</span>
+                        </label>
+                        <input type="file" id="input-photo-3" accept="image/*" class="hidden" onchange="updatePhoto(this, 'photo-3')">
+                    </div>
+                    <p class="font-handwriting text-xl text-center text-desert-dark mt-2">Joyful Day 🎈</p>
+                </div>
+
+                <!-- Decorative Wishes Card -->
+                <div class="bg-desert-card border border-desert-border p-4 rounded-xl shadow-sm text-center w-64 lg:w-full">
+                    <div class="text-2xl mb-1">✨🎂🎁</div>
+                    <p class="text-xs text-desert-dark font-medium">
+                        "Semoga di usia 24 ini semakin bahagia, sukses, dan penuh keberkahan selalu!"
+                    </p>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Footer -->
+        <footer class="text-center mt-12 mb-6 text-xs text-desert-primary/70">
+            Dibuat dengan ❤️ khusus untuk Owa
+        </footer>
+    </main>
+
+    <script>
+        // DOM Elements
+        const envelopeBtn = document.getElementById('envelope-btn');
+        const envelopeBox = document.getElementById('envelope-box');
+        const envelopeSection = document.getElementById('envelope-section');
+        const letterSection = document.getElementById('letter-section');
+        const bgMusic = document.getElementById('bg-music');
+        const musicToggle = document.getElementById('music-toggle');
+        const musicIcon = document.getElementById('music-icon');
+        const candleFlame = document.getElementById('candle-flame');
+        const candleSmoke = document.getElementById('candle-smoke');
+        const cakeContainer = document.getElementById('cake-container');
+        const blowBtn = document.getElementById('blow-btn');
+
+        let isMusicPlaying = false;
+        let isCandleOut = false;
+
+        // 1. Particle Background Generator
+        function createAmbientParticles() {
+            const container = document.getElementById('ambient-particles');
+            const icons = ['✨', '💖', '🎈', '🌸', '⭐'];
+            
+            for (let i = 0; i < 15; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.innerHTML = icons[Math.floor(Math.random() * icons.length)];
+                particle.style.left = `${Math.random() * 100}vw`;
+                particle.style.animationDuration = `${6 + Math.random() * 6}s`;
+                particle.style.animationDelay = `${Math.random() * 5}s`;
+                particle.style.fontSize = `${12 + Math.random() * 14}px`;
+                container.appendChild(particle);
+            }
+        }
+
+        // 2. Music Player Control Function
+        function toggleMusic() {
+            if (isMusicPlaying) {
+                bgMusic.pause();
+                musicIcon.className = 'fas fa-music text-sm opacity-50';
+                isMusicPlaying = false;
+            } else {
+                bgMusic.play().then(() => {
+                    musicIcon.className = 'fas fa-pause text-sm';
+                    isMusicPlaying = true;
+                }).catch(err => {
+                    console.log("Audio playback error:", err);
+                });
+            }
+        }
+
+        musicToggle.addEventListener('click', toggleMusic);
+
+        // 3. Confetti Trigger Effect
+        function launchConfetti() {
+            const count = 200;
+            const defaults = {
+                origin: { y: 0.7 },
+                colors: ['#C26D3C', '#E6A871', '#FDE9D0', '#5C2E14']
+            };
+
+            function fire(particleRatio, opts) {
+                confetti(Object.assign({}, defaults, opts, {
+                    particleCount: Math.floor(count * particleRatio)
+                }));
+            }
+
+            fire(0.25, { spread: 26, startVelocity: 55 });
+            fire(0.2, { spread: 60 });
+            fire(0.35, { spread: 100, decay: 0.91, scalar: 0.8 });
+            fire(0.1, { spread: 120, startVelocity: 25, decay: 0.92, scalar: 1.2 });
+            fire(0.1, { spread: 120, startVelocity: 45 });
+        }
+
+        // 4. Open Envelope & Show Letter Logic
+        envelopeBtn.addEventListener('click', () => {
+            // Animate Envelope Flap
+            envelopeBox.classList.add('open');
+
+            // Attempt Music Playback
+            bgMusic.play().then(() => {
+                isMusicPlaying = true;
+                musicIcon.className = 'fas fa-pause text-sm';
+            }).catch(() => {
+                console.log("Auto-play blocked, user can click music button manually");
+            });
+
+            // Smooth Transition to Main Content
+            setTimeout(() => {
+                envelopeSection.classList.add('opacity-0');
+                setTimeout(() => {
+                    envelopeSection.classList.add('hidden');
+                    letterSection.classList.remove('hidden');
+                    
+                    // Fade In Main Letter
+                    setTimeout(() => {
+                        letterSection.classList.remove('opacity-0', 'translate-y-8');
+                        letterSection.classList.add('opacity-100', 'translate-y-0');
+                        // Launch Celebration Confetti
+                        launchConfetti();
+                    }, 50);
+                }, 700);
+            }, 600);
+        });
+
+        // 5. Candle Blowing Interaction
+        function blowOutCandle() {
+            if (isCandleOut) return;
+
+            candleFlame.classList.add('hidden');
+            candleSmoke.classList.remove('hidden');
+            isCandleOut = true;
+            blowBtn.innerHTML = '<i class="fas fa-check mr-1"></i> Sudah Ditiup!';
+            blowBtn.classList.replace('text-desert-primary', 'text-green-700');
+
+            // Extra Mini Confetti
+            confetti({
+                particleCount: 50,
+                spread: 50,
+                origin: { y: 0.5 }
+            });
+        }
+
+        cakeContainer.addEventListener('click', blowOutCandle);
+        blowBtn.addEventListener('click', blowOutCandle);
+
+        // 6. Photo Update Handler
+        function updatePhoto(input, imgId) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById(imgId).src = e.target.result;
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        // Initialize background particles on load
+        window.addEventListener('DOMContentLoaded', () => {
+            createAmbientParticles();
+        });
+    </script>
+</body>
+</html>
